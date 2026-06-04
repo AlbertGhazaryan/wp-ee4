@@ -1,0 +1,54 @@
+{% if customer %}
+
+<div id="favorite-products-wrapper">
+  Loading favourite products...
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+
+  const wrapper = document.getElementById(
+    'favorite-products-wrapper'
+  );
+
+  const response = await fetch(
+    'https://backstage-dev.myshopify.com/api/favorite-products?customerId={{ customer.id }}&shop={{ shop.permanent_domain }}'
+  );
+
+  const products = await response.json();
+
+  if (!products.length) {
+    wrapper.innerHTML = 'No favourite products';
+    return;
+  }
+
+  let html = '';
+
+  products.forEach((item) => {
+
+    html += `
+      <div>
+        Product ID: ${item.productId}
+      </div>
+    `;
+  });
+
+  wrapper.innerHTML = html;
+
+});
+</script>
+
+{% else %}
+
+<p>Please login</p>
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Favourite Products",
+  "target": "section",
+  "settings": [],
+  
+}
+{% endschema %}

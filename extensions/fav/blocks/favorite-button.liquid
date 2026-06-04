@@ -1,0 +1,59 @@
+{% if customer %}
+
+<button
+  id="favorite-product-button"
+  type="button"
+>
+  Add to favourites v2
+</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+
+  const button = document.getElementById(
+    'favorite-product-button'
+  );
+
+  if (!button) return;
+
+  button.addEventListener('click', async () => {
+
+    const response = await fetch(
+      '/apps/favorites?productId={{ product.id }}&customerId={{ customer.id }}&shop={{ shop.permanent_domain }}',   
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        /*body: JSON.stringify({
+          productId: '{{ product.id }}',
+          customerId: '{{ customer.id }}',
+          shop: '{{ shop.permanent_domain }}'
+        })*/
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.success) {
+      button.innerText = 'Saved';
+    }
+  });
+
+});
+</script>
+
+{% else %}
+
+<p>Please login to save favourites</p>
+
+{% endif %}
+
+{% schema %}
+{
+  "name": "Favorite Button",
+  "target": "section",
+  "settings": []
+}
+{% endschema %}
