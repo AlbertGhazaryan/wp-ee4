@@ -45,7 +45,8 @@
     "react-router-dom": "^7.17.0",
     "vite-tsconfig-paths": "^5.1.4",
     "@remix-run/fs-routes": "^x.x.x",
-    "@remix-run/dev": "^x.x.x"
+    "@remix-run/dev": "^x.x.x",
+    "@netlify/vite-plugin-react-router":"^0.0.0"
 
   },
   "devDependencies": {
