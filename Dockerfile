@@ -1,18 +1,22 @@
-FROM node:20-alpine
+FROM node:18-alpine
 
 WORKDIR /app
-
-# Copy package files first for better caching
 COPY package*.json ./
-RUN npm ci --omit=dev
 
-# Copy the rest of the application
+# Install ALL dependencies (including dev)
+RUN npm install
+
+# Copy the rest of the app
 COPY . .
 
 # Build the app
 RUN npm run build
 
-EXPOSE 3000
+# Remove CLI packages (not needed in production)
+RUN npm remove @shopify/app @shopify/cli
 
-# Run the app server, not shopify commands
+# Clean up dev dependencies to reduce image size
+RUN npm prune --production
+
+EXPOSE 3000
 CMD ["npm", "start"]
