@@ -6,7 +6,7 @@ COPY package*.json ./
 # Install ALL dependencies (including dev)
 RUN npm install
 
-# Copy the rest of the app
+# Copy the rest of the app 
 COPY . .
 
 EXPOSE 3000
