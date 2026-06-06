@@ -1,13 +1,13 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
-COPY package*.json ./
 
-# Install ALL dependencies (including dev)
+COPY package*.json ./
 RUN npm install
 
-# Copy the rest of the app 
 COPY . .
+RUN npm run build
 
 EXPOSE 3000
-CMD ["npm", "start"]
+
+CMD ["npx", "react-router-serve", "./build/server/index.js"]
