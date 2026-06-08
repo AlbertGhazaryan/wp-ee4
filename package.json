@@ -8,6 +8,7 @@
     "generate": "shopify app generate",
     "deploy": "shopify app deploy",
     "config:use": "shopify app config use",
+    "postinstall": "prisma generate",
     "env": "shopify app env",
     "start": "NODE_ENV=production react-router-serve ./build/server/index.js",
     "docker-start": "npm run setup && npm run start",
