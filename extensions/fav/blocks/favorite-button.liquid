@@ -4,7 +4,7 @@
   id="favorite-product-button"
   type="button"
 >
-  Add to favourites v2
+  Add to favourites v3
 </button>
 
 <script>
@@ -17,20 +17,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!button) return;
 
   button.addEventListener('click', async () => {
-
+      //?productId={{ product.id }}&customerId={{ customer.id }}&shop={{ shop.permanent_domain }}
     const response = await fetch(
-      '/apps/favorites?productId={{ product.id }}&customerId={{ customer.id }}&shop={{ shop.permanent_domain }}',   
+      '/apps/favorites',   
       {
-        method: 'GET',
+        method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
-        /*body: JSON.stringify({
+        body: JSON.stringify({
           productId: '{{ product.id }}',
           customerId: '{{ customer.id }}',
           shop: '{{ shop.permanent_domain }}'
-        })*/
+        })
       }
     );
 

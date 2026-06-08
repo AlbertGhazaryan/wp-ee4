@@ -51,7 +51,7 @@ redirect_urls = [ "https://wp-ee4.onrender.com//api/auth" ]
 automatically_update_urls_on_dev = false
 
 [app_proxy]
-url = "https://wp-ee4.onrender.com"
+url = "https://wp-ee4.onrender.com/apps/favorites"
 subpath = "favorites"
 prefix = "apps"
 
