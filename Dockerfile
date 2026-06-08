@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:20.19-alpine
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 ENV NODE_OPTIONS=--max-old-space-size=512
