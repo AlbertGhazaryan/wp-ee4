@@ -1,15 +1,14 @@
-FROM node:20.19-slim
+FROM node:20-slim
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 COPY . .
 
-RUN npx prisma generate
-RUN npm run build
+RUN npm install @rollup/rollup-linux-x64-gnu --save-dev
 
-EXPOSE 3000
+RUN npm run build
 
 CMD ["npx", "react-router-serve", "./build/server/index.js"]
