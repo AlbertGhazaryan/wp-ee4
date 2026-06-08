@@ -14,7 +14,5 @@ RUN npm run build
 
 EXPOSE 3000
 
-
-
 CMD ["npx", "react-router-serve", "./build/server/index.js"]
 
