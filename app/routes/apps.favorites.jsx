@@ -114,7 +114,7 @@ export async function action({ request }) {
 // Handle GET requests (fetching favorites list)
 export async function loader({ request }) {
 
-    return new Response("proxy route is alive", { status: 200 });
+    //return new Response("proxy route is alive", { status: 200 });
   try {
     const { session } = await authenticate.public.appProxy(request);
     
