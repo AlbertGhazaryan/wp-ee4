@@ -1,5 +1,5 @@
-import { prisma } from "../db.server";
-import { authenticate } from "../shopify.server";
+//import { prisma } from "../db.server";
+//import { authenticate } from "../shopify.server";
 const corsHeaders = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Origin": "*",
@@ -17,6 +17,8 @@ export async function loader({ request }) {
 // Handles POST ← make sure this exists
 export async function action({ request }) {
  // const { session } = await authenticate.public.appProxy(request);
+  const  prisma  = await import("../db.server");
+  const { authenticate } = await import("../shopify.server");
   return new Response(
     JSON.stringify({ ok: true }),
     { status: 200, headers: corsHeaders }
