@@ -8,8 +8,8 @@ RUN npm install
 COPY . .
 
 RUN npm install @rollup/rollup-linux-x64-gnu --save-dev
-RUN find . -name schema.prisma
-RUN npx prisma generate
+RUN npx prisma generate --schema=./prisma/schema.prisma
+
 RUN npm run build
 
 CMD ["npx", "react-router-serve", "./build/server/index.js"]
