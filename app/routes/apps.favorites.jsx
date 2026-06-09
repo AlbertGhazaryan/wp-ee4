@@ -5,7 +5,7 @@ import  prisma  from "../db.server";
 export async function action({ request }) {
   try {
     // 1. Authenticate the request and get the session
-    const { admin, session } = await authenticate.public.appProxy(request);
+    //const { admin, session } = await authenticate.public.appProxy(request);
     
     // 2. Get the request body data
     const { productId, customerId, shop } = await request.json();
@@ -22,8 +22,8 @@ export async function action({ request }) {
     }
     
     // 4. Use the authenticated session's shop if not provided
-    const shopName = shop || session.shop;
-    const userId = customerId || session.userId;
+    const shopName = shop;// || session.shop;
+    const userId = customerId; // || session.userId;
     
     // 5. Check if favorite already exists
     const existingFavorite = await prisma.favoriteProduct.findFirst({
@@ -116,12 +116,14 @@ export async function loader({ request }) {
 
     //return new Response("proxy route is alive", { status: 200 });
   try {
-    const { session } = await authenticate.public.appProxy(request);
-    
+    //const { session } = await authenticate.public.appProxy(request);
+    const { productId, customerId, shop } = await request.json();
+
+
     const favorites = await prisma.favoriteProduct.findMany({
       where: {
-        userId: session.userId,
-        shopName: session.shop
+        userId: customerId,
+        shopName: shop
       },
       orderBy: {
         createdAt: 'desc'
