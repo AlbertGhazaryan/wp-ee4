@@ -1,19 +1,21 @@
 import { authenticate } from "../shopify.server";
-import  prisma  from "../db.server";
+import prisma from "../db.server";
 
-// Handle POST requests (saving favorites)
 export async function action({ request }) {
   try {
-    // 1. Authenticate the request and get the session
-    //const { admin, session } = await authenticate.public.appProxy(request);
+    // Parse the request body
+    const body = await request.json();
+    const { productId, customerId, shop } = body;
     
-    // 2. Get the request body data
-    const { productId, customerId, shop } = await request.json();
+    console.log("POST received:", { productId, customerId, shop });
     
-    // 3. Validate required fields
-    if (!productId) {
+    // Validate required fields
+    if (!productId || !customerId) {
       return new Response(
-        JSON.stringify({ success: false, error: "Product ID is required" }),
+        JSON.stringify({ 
+          success: false, 
+          error: "Product ID and Customer ID are required" 
+        }),
         { 
           status: 400,
           headers: { "Content-Type": "application/json" }
@@ -21,29 +23,28 @@ export async function action({ request }) {
       );
     }
     
-    // 4. Use the authenticated session's shop if not provided
-    const shopName = shop;// || session.shop;
-    const userId = customerId; // || session.userId;
+    const shopName = shop;
+    const userId = customerId;
     
-    // 5. Check if favorite already exists
+    // Check if favorite already exists
     const existingFavorite = await prisma.favoriteProduct.findFirst({
       where: {
-        productId: productId,
-        userId: userId,
+        productId: String(productId),
+        userId: String(userId),
         shopName: shopName
       }
     });
     
     if (existingFavorite) {
-      // If already exists, optionally delete it (toggle functionality)
-      await prisma.productFavorite.delete({
+      // Toggle: remove if exists
+      await prisma.favoriteProduct.delete({
         where: { id: existingFavorite.id }
       });
       
       return new Response(
         JSON.stringify({ 
           success: true, 
-  message: "Product removed from favorites",
+          message: "Product removed from favorites",
           action: "removed"
         }),
         { 
@@ -53,16 +54,15 @@ export async function action({ request }) {
       );
     }
     
-    // 6. Save new favorite to database
+    // Create new favorite
     const favorite = await prisma.favoriteProduct.create({
       data: {
-        productId: productId,
-        userId: userId,
+        productId: String(productId),
+        userId: String(userId),
         shopName: shopName
       }
     });
     
-    // 7. Return success response
     return new Response(
       JSON.stringify({
         success: true,
@@ -77,13 +77,9 @@ export async function action({ request }) {
     );
     
   } catch (error) {
+    console.error("Error in action:", error);
     
-    console.error(`File: ${error.filename}`);
-    console.error(`Line: ${error.lineno}`);
-    console.error(`Column: ${error.colno}`);
-    console.error("Error saving favorite:", error);
-    
-    // Handle duplicate key errors gracefully
+    // Check for Prisma duplicate error
     if (error.code === 'P2002') {
       return new Response(
         JSON.stringify({ 
@@ -97,11 +93,10 @@ export async function action({ request }) {
       );
     }
     
-    // Generic error response
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: "Failed to save favorite" 
+        error: error.message || "Failed to save favorite" 
       }),
       { 
         status: 500,
@@ -111,18 +106,29 @@ export async function action({ request }) {
   }
 }
 
-// Handle GET requests (fetching favorites list)
+// GET handler for fetching favorites
 export async function loader({ request }) {
-
-    //return new Response("proxy route is alive", { status: 200 });
   try {
-    //const { session } = await authenticate.public.appProxy(request);
-    const { productId, customerId, shop } = await request.json();
-
-
+    const url = new URL(request.url);
+    const customerId = url.searchParams.get('customerId');
+    const shop = url.searchParams.get('shop');
+    
+    if (!customerId || !shop) {
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: "Customer ID and Shop are required" 
+        }),
+        { 
+          status: 400,
+          headers: { "Content-Type": "application/json" }
+        }
+      );
+    }
+    
     const favorites = await prisma.favoriteProduct.findMany({
       where: {
-        userId: customerId,
+        userId: String(customerId),
         shopName: shop
       },
       orderBy: {
@@ -147,8 +153,7 @@ export async function loader({ request }) {
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: "Failed to fetch favorites", 
-        msg: error 
+        error: "Failed to fetch favorites" 
       }),
       { 
         status: 500,
@@ -156,15 +161,4 @@ export async function loader({ request }) {
       }
     );
   }
-
-  return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: "No data" 
-      }),
-      { 
-        status: 200,
-        headers: { "Content-Type": "application/json" }
-      }
-    );
 }
