@@ -30,8 +30,8 @@ export async function action({ request }) {
     const existingFavorite = await prisma.favoriteProduct.findFirst({
       where: {
         productId: String(productId),
-        userId: String(userId),
-        shopName: shopName
+        customerId: String(userId),
+        shop: shopName
       }
     });
     
@@ -58,8 +58,8 @@ export async function action({ request }) {
     const favorite = await prisma.favoriteProduct.create({
       data: {
         productId: String(productId),
-        userId: String(userId),
-        shopName: shopName
+        customerId: String(userId),
+        shop: shopName
       }
     });
     
@@ -128,8 +128,8 @@ export async function loader({ request }) {
     
     const favorites = await prisma.favoriteProduct.findMany({
       where: {
-        userId: String(customerId),
-        shopName: shop
+        customerId: String(customerId),
+        shop: shop
       },
       orderBy: {
         createdAt: 'desc'
