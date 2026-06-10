@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   );
 
   if (!button) return;
-
+  var productId = '{{ product.id }}'; 
   button.addEventListener('click', async () => {
       //?productId={{ product.id }}&customerId={{ customer.id }}&shop={{ shop.permanent_domain }}
     const response = await fetch(
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          productId: '{{ product.id }}',
+          productId: productId,
           customerId: '{{ customer.id }}',
           shop: '{{ shop.permanent_domain }}'
         })
@@ -40,7 +40,29 @@ document.addEventListener('DOMContentLoaded', async () => {
       button.innerText = 'Saved';
     }
   });
+  async function GetStatus(){
+    const response = await fetch(
+      '/apps/favorites',   
+      {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({          
+          customerId: '{{ customer.id }}',
+          shop: '{{ shop.permanent_domain }}'
+        })
+      }
+    );
 
+    const data = await response.json();
+    if(data){
+      console.log('data', data); 
+    }
+  }
+
+  GetStatus();
 });
 </script>
 
