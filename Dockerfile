@@ -13,4 +13,4 @@ RUN npm install @rollup/rollup-linux-x64-gnu --save-dev
 RUN npx prisma migrate dev --name init
 RUN npm run build
 
-CMD ["npx", "react-router-serve", "./build/server/index.js"]
+#CMD ["npx", "react-router-serve", "./build/server/index.js"]
