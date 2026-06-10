@@ -153,7 +153,8 @@ export async function loader({ request }) {
     return new Response(
       JSON.stringify({ 
         success: false, 
-        error: "Failed to fetch favorites" 
+        error: "Failed to fetch favorites", 
+        msg : error, 
       }),
       { 
         status: 500,
