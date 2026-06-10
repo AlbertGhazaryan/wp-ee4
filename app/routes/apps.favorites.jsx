@@ -140,6 +140,7 @@ export async function loader({ request }) {
       JSON.stringify({
         success: true,
         count: favorites.length,
+        args:{customerId, shop}, 
         favorites: favorites
       }),
       { 

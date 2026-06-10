@@ -42,17 +42,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   async function GetStatus(){
     const response = await fetch(
-      '/apps/favorites',   
+      '/apps/favorites?customerId={{ customer.id }}&shop={{ shop.permanent_domain }}',   
       {
-        method: 'POST',
+        //method: 'POST',
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({          
+        /*body: JSON.stringify({          
           customerId: '{{ customer.id }}',
           shop: '{{ shop.permanent_domain }}'
-        })
+        })*/
       }
     );
 
